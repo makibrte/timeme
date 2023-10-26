@@ -1,23 +1,20 @@
 import { supabase } from "@/app/supabaseClient";
 import { NextRequest, NextResponse } from "next/server";
-
+import { urlParser } from "@/util/urlParser";
+import { querySupabase } from "@/util/querySupabase";
 export const GET = async(req: NextRequest) : Promise<NextResponse> =>{
     
-      //Getting the URL parameter, have to figure out a better way
-      const day:string = req.nextUrl.searchParams.values().next().value;
-
-      const {data, error} = await supabase
-      .from('tasks')
-      .select('*')
-      .eq('day', day)
-
+      //Getting the URL parameter
+      const query = await urlParser(req, supabase, 'tasks');
+      //Querying the data
+      const {data, error} = await querySupabase('retrieving tasks', query);
+      
       if(error){
-            console.error(`Error retrieving tasks for ${day}. Error: ${error.details}`)
-            return NextResponse.json({error:error});
+            return NextResponse.json({error:error.details});
       }
-      //This means no data has been returned as it comes back in form of a list
-      if(data.length === 0){
-            return NextResponse.json({message: "Found no tasks that day"});
+      else if(data.length === 0){
+            
+            return NextResponse.json({message: "Found no tasks"});
       }
 
       return NextResponse.json({message: "success", data: data});
