@@ -1,0 +1,19 @@
+.navbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    gap: 1.5rem;
+    background-color: gray;
+    width: 100%;
+    padding: 15px;
+}
+
+.link {
+    color: black;
+    font-size: 1.2rem;
+}
+
+.link:hover {
+    color: white;
+    transition: 0.2s;
+}
